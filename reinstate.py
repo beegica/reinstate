@@ -80,7 +80,8 @@ When you are ready to begin, press *ENTER*
 
 #   [(ThrownAway, List2, List3, List2, ThrownAway,) (ThrownAway, List3, ThrownAway)]
 cloneList = [None, None, None, None, None, None, None, None]
-
+KEYS1 = ['F','J']
+KEYS2 = ['F','G','H','J']
 ReturnList =[]
 List1 = []
 List2 = []
@@ -196,16 +197,18 @@ for i in range(numSets):
                         'rep':None,
                         'liv_nonliv':buildingList1[x]['liv_nonliv'],
                         'first_appear_list':1,
-                        'curr_list':1,})
-    
+                        'curr_list':1,
+                        'correct_resp':KEYS1[buildingList1[x]['liv_nonliv']=='non'})
     # Fill in each dictionary at index for List2
     # Start with the dictionaries that are already built
     listDic2.append(listDic1[1].copy())
     listDic2[0]['curr_list'] = 2
     listDic2[0]['rep'] = False
+    listDic2[0]['correct_resp'] = [KEYS2[2], KEYS2[3]]
     listDic2.append(listDic1[3].copy())
     listDic2[1]['curr_list'] = 2
     listDic2[1]['rep'] = False
+    listDic2[1]['correct_resp'] = [KEYS2[2], KEYS2[3]]
     for x in range(6):
         if x < 2:
             listDic2.append({'stim':buildingList2[x]['stim'],
@@ -215,7 +218,8 @@ for i in range(numSets):
                              'rep':False,
                              'liv_nonliv':buildingList2[x]['liv_nonliv'],
                              'first_appear_list':2,
-                             'curr_list':2,})
+                             'curr_list':2,
+                             'correct_resp':[KEYS2[0],KEYS2[1]]})
         else:
             listDic2.append({'stim':buildingList2[x]['stim'],
                              'set_num':None,
@@ -224,30 +228,35 @@ for i in range(numSets):
                              'rep':True,
                              'liv_nonliv':buildingList2[x]['liv_nonliv'],
                              'first_appear_list':2,
-                             'curr_list':2,})
+                             'curr_list':2,
+                             'correct_resp':[KEYS2[2],KEYS2[3]]})
 
     # Fill in each dictionary at index for List3
     # Start with the dictionaries that are already built from lists 1 and 2
     listDic3.append(listDic1[2].copy())
     listDic3[0]['curr_list'] = 3
+    listDic3[0]['correct_resp'] = [KEYS2[0], KEYS2[1]]
     listDic3.append(listDic1[6].copy())
     listDic3[1]['curr_list'] = 3
+    listDic3[1]['correct_resp'] = [KEYS2[0], KEYS2[1]]
     listDic3.append({'stim':buildingList3[0]['stim'],
-                    'set_num':None,
-                    'stim_num':None,
-                    'cond':None,
-                    'rep':None,
-                    'liv_nonliv':buildingList3[0]['liv_nonliv'],
-                    'first_appear_list':2,
-                    'curr_list':3})
+                     'set_num':None,
+                     'stim_num':None,
+                     'cond':None,
+                     'rep':None,
+                     'liv_nonliv':buildingList3[0]['liv_nonliv'],
+                     'first_appear_list':2,
+                     'curr_list':3,
+                     'correct_resp':[KEYS2[2],KEYS2[3]]})
     listDic3.append({'stim':buildingList3[1]['stim'],
-                    'set_num':None,
-                    'stim_num':None,
-                    'cond':None,
-                    'rep':None,
-                    'liv_nonliv':buildingList3[1]['liv_nonliv'],
-                    'first_appear_list':2,
-                    'curr_list':3})
+                     'set_num':None,
+                     'stim_num':None,
+                     'cond':None,
+                     'rep':None,
+                     'liv_nonliv':buildingList3[1]['liv_nonliv'],
+                     'first_appear_list':2,
+                     'curr_list':3,
+                     'correct_resp':[KEYS2[2],KEYS2[3]]})
     
     List1.append(listDic1)
     
@@ -288,7 +297,7 @@ INTER_FIX_DUR = .2
 STIM_DUR = 2
 INTER_STIM_DUR = .2
 RST_FONT_SIZE = 31
-KEYS = ['F','J']
+
 PRE_BLOCK_DUR = 3
 FONT_SIZE = 20
 # Math Distractor Variables
@@ -306,10 +315,10 @@ Wait(PRE_BLOCK_DUR)
 with Loop(List1) as trials1:
     Label(text = '+', font_size=FONT_SIZE, duration=FIX_DUR)
     Wait(INTER_FIX_DUR)
-    exp.correct_resp = trials1.current['liv_nonliv']=='non' # CHANGE THIS LINE LATER FOR EEG (If EVER)
+    #exp.correct_resp = trials1.current['liv_nonliv']=='non' # CHANGE THIS LINE LATER FOR EEG (If EVER)
     lb = Label(text=trials1.current['stim'], duration=STIM_DUR, font_size=FONT_SIZE)
     with Meanwhile():
-        kp = KeyPress(keys=KEYS, correct_resp=Ref.getitem(KEYS,exp.correct_resp)) # Change this line later for EEG (IF EVER)
+        kp = KeyPress(keys=KEYS1, correct_resp=trial.current['correct_resp']) # Change this line later for EEG (IF EVER)
     Wait(INTER_STIM_DUR)
     Log(name = 'List1_SetsOfEight',
         trial_info = trials1.current,
@@ -323,7 +332,7 @@ with UntilDone():
 MathDistract(num_vars=num_vars, duration=math_distract_dur)
 
 # Block 2 : Rememberence Task
-# Press F for new and J for old!
+# Hit F and G for new, and H and J for old
 RstDocument(text = Instruc2, base_font_size=RST_FONT_SIZE, size=exp.screen.size, plus_and_minus=pam)
 with UntilDone():
     KeyPress(keys=['ENTER'])
@@ -331,10 +340,10 @@ Wait(PRE_BLOCK_DUR)
 with Loop(List2) as trials2:
     Label(text = '+', font_size=FONT_SIZE, duration=FIX_DUR)
     Wait(INTER_FIX_DUR)
-    exp.correct_resp = trials2.current['first_appear_list'] == 1 or trials2.current['rep'] # Change this line for EEG if ever
+    #exp.correct_resp = trials2.current['first_appear_list'] == 1 or trials2.current['rep'] # Change this line for EEG if ever
     lb = Label(text=trials2.current['stim'], duration=STIM_DUR, font_size=FONT_SIZE)
     with Meanwhile():
-        kp = KeyPress(keys=KEYS, correct_resp=Ref.getitem(KEYS,exp.correct_resp)) # Change this line later for EEG (IF EVER)
+        kp = KeyPress(keys=KEYS2, correct_resp=trial.current['correct_resp']) # Change this line later for EEG (IF EVER)
     Wait(INTER_STIM_DUR)
     Log(name='List2_RepeatedItems',
         trial_info = trials2.current,
@@ -349,7 +358,7 @@ with UntilDone():
 MathDistract(num_vars=num_vars, duration=math_distract_dur, plus_and_minus=pam)
 
 # Block 3 : List Discrimination
-# Hit F for list 1, and J for List 2
+# Hit F and G for list 1, and H and J for List 2
 RstDocument(text = Instruc3, base_font_size=RST_FONT_SIZE, size=exp.screen.size)
 with UntilDone():
     KeyPress(keys=['ENTER'])
@@ -357,10 +366,10 @@ Wait(PRE_BLOCK_DUR)
 with Loop(List3) as trials3:
     Label(text = '+', font_size=FONT_SIZE, duration=FIX_DUR)
     Wait(INTER_FIX_DUR)
-    exp.correct_resp = trials3.current['first_appear_list'] == 2
+    #exp.correct_resp = trials3.current['first_appear_list'] == 2
     lb = Label(text=trials3.current['stim'], duration=STIM_DUR, font_size=FONT_SIZE)
     with Meanwhile():
-        kp = KeyPress(keys=KEYS, correct_resp=Ref.getitem(KEYS,exp.correct_resp)) # Change this line later for EEG (IF EVER)
+        kp = KeyPress(keys=KEYS2, correct_resp=trial.current['correct_resp']) # Change this line later for EEG (IF EVER)
     Wait(INTER_STIM_DUR)
     Log(name='List3_ListDiscrim',
         trial_info = trials3.current,
