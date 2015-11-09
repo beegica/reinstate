@@ -1,6 +1,6 @@
 import random as rm
 from smile import *
-from smile.mathdistract import MathDistract
+from mathdistract import MathDistract
 
 # LIST GEN START
 filenameL = "pools/living.txt"
@@ -40,43 +40,96 @@ Try to remember as many words as possible, for you will be tested on them later.
 
 Press *ENTER* to continue.
 '''
-Instruc2 = '''In this list, you are going to be presented with words from the previous list, as well as words you have not seen before. Some words will be repeated in this list.
+
+Instruc2 = '''In this list, you are going to be presented with words from the previous list, as well as words you have not seen before. Some words will be repeated in this list. You press a key to tell us wether or not you have seen the presented word. 
 
 ::
 
-    Press F if it is a word you are seeing for the first time. 
+    Press F if it is a word you KNOW is a new word. 
 
 ::
 
-    Press J if you have seen this word repeated, either from the first list or if this is the second time you are seeing an item from this list. 
+    Press G if it is a word that you THINK is a new word.
+   
+:: 
+    
+    Press H if it is a word that you THINK is a word you have seen before, repeated from this list or the last list.
+::
+
+    Press J if it is a word that you KNOW is a word you have seen before, repeated from this list or the last list. 
 
 To reiterate
 
 ::
 
-    Press F for the first time you have seen a word
+    Press F if you are positive it is a new word.
+    
+::
+
+    Press G if you think it is a new word.
+    
+::
+
+    Press H if you think it is a repeated word.
 
 ::
 
-    Press J if you have seen this word once before.
+    Press J if you are positive it is a repeated word. 
     
 When you are ready to begin, press *ENTER*
 '''
 
-Instruc3 = '''In this list, we ask that you tell us which list, either the first or the second, that the words you are about to view came from.  
+Instruc3 = '''In the next set of words, we ask that you tell us which list the presented word came from. You will have 4 choices depending on how sure you are.   
 
 ::
 
-    Press F if the word was presented in List 1
+    Press F if it is a word you KNOW is from list 1. 
 
 ::
 
-    Press J if the word was presented in List 2
+    Press G if it is a word that you THINK is from list 1.
+   
+:: 
+    
+    Press H if it is a word that you THINK is from list 2.
+::
+
+    Press J if it is a word that you KNOW is from list 2. 
+
+To reiterate
+
+::
+
+    Press F if you are positive it is from list 1.
+    
+::
+
+    Press G if you think it is from list 1.
+    
+::
+
+    Press H if you think it is from list 2.
+
+::
+
+    Press J if you are positive it is from list 2. 
     
 When you are ready to begin, press *ENTER*
 
 '''
+mathDistractorInst = '''In this task, you will view a list of math equations. Either they are correct, and the sum to the left of the equal sign equals the value on the right, or they are incorrect, and the sum doesn't equal the value on the right. 
 
+::
+
+    Press F if the math equation is True.
+    
+::
+
+    Press J if the math equation is False. 
+    
+Press *Enter* to to start the math portion of this experiment. 
+
+'''
 
 #   [(ThrownAway, List2, List3, List2, ThrownAway,) (ThrownAway, List3, ThrownAway)]
 cloneList = [None, None, None, None, None, None, None, None]
@@ -198,7 +251,7 @@ for i in range(numSets):
                         'liv_nonliv':buildingList1[x]['liv_nonliv'],
                         'first_appear_list':1,
                         'curr_list':1,
-                        'correct_resp':KEYS1[buildingList1[x]['liv_nonliv']=='non'})
+                        'correct_resp':KEYS1[buildingList1[x]['liv_nonliv']=='non']})
     # Fill in each dictionary at index for List2
     # Start with the dictionaries that are already built
     listDic2.append(listDic1[1].copy())
@@ -318,7 +371,7 @@ with Loop(List1) as trials1:
     #exp.correct_resp = trials1.current['liv_nonliv']=='non' # CHANGE THIS LINE LATER FOR EEG (If EVER)
     lb = Label(text=trials1.current['stim'], duration=STIM_DUR, font_size=FONT_SIZE)
     with Meanwhile():
-        kp = KeyPress(keys=KEYS1, correct_resp=trial.current['correct_resp']) # Change this line later for EEG (IF EVER)
+        kp = KeyPress(keys=KEYS1, correct_resp=trials1.current['correct_resp']) # Change this line later for EEG (IF EVER)
     Wait(INTER_STIM_DUR)
     Log(name = 'List1_SetsOfEight',
         trial_info = trials1.current,
@@ -343,7 +396,7 @@ with Loop(List2) as trials2:
     #exp.correct_resp = trials2.current['first_appear_list'] == 1 or trials2.current['rep'] # Change this line for EEG if ever
     lb = Label(text=trials2.current['stim'], duration=STIM_DUR, font_size=FONT_SIZE)
     with Meanwhile():
-        kp = KeyPress(keys=KEYS2, correct_resp=trial.current['correct_resp']) # Change this line later for EEG (IF EVER)
+        kp = KeyPress(keys=KEYS2, correct_resp=trials2.current['correct_resp']) # Change this line later for EEG (IF EVER)
     Wait(INTER_STIM_DUR)
     Log(name='List2_RepeatedItems',
         trial_info = trials2.current,
@@ -369,7 +422,7 @@ with Loop(List3) as trials3:
     #exp.correct_resp = trials3.current['first_appear_list'] == 2
     lb = Label(text=trials3.current['stim'], duration=STIM_DUR, font_size=FONT_SIZE)
     with Meanwhile():
-        kp = KeyPress(keys=KEYS2, correct_resp=trial.current['correct_resp']) # Change this line later for EEG (IF EVER)
+        kp = KeyPress(keys=KEYS2, correct_resp=trials3.current['correct_resp']) # Change this line later for EEG (IF EVER)
     Wait(INTER_STIM_DUR)
     Log(name='List3_ListDiscrim',
         trial_info = trials3.current,
