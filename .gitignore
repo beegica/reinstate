@@ -8,6 +8,7 @@ Desktop.ini
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
 
+$data/
 # Windows Installer files
 *.cab
 *.msi
@@ -41,3 +42,7 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+*.slog
+*.pyc
+*.pyc
+*.pyc
